@@ -28,4 +28,4 @@ def test_table_handling(page: Page):
     rice_price=rice_row.locator("td").nth(col_value).inner_text()
     print(rice_price)
 
-    expect(rice_price).to_equal("37")
+    assert rice_price == "37"
