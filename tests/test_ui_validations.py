@@ -1,6 +1,14 @@
 from tkinter import dialog
+from playwright.sync_api import Playwright, Page, expect
+import pytest
+import json
 
-from playwright.sync_api import Page, expect
+# JSON file -> util -> access to test
+with open("data/credentials.json") as f:
+    test_data = json.load(f)
+    print(test_data)
+
+user_credentials_list = test_data['user_credentials']
 
 
 def test_ui_validations_dynamic_script(page:Page):
@@ -31,3 +39,17 @@ def test_ui_validations_dynamic_script(page:Page):
     expect(page.get_by_role("link", name="Nokia Edge")).to_be_visible()
     expect(page.get_by_role("link", name="iphone X")).to_be_visible()
 
+
+@pytest.mark.api
+@pytest.mark.parametrize("user_credentials", user_credentials_list)
+def test_e2e_web_api(playwright: Playwright, user_credentials):
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    page = context.new_page()
+
+    # Login
+    page.goto("https://rahulshettyacademy.com/client/#/")
+    page.fill("#userEmail", user_credentials['userEmail'])
+    page.fill("#userPassword", user_credentials['userPassword'])
+    page.click("#login")
+    expect(page).to_have_url("https://rahulshettyacademy.com/client/#/dashboard/dash", timeout=10000)
