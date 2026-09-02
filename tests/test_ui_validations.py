@@ -2,6 +2,7 @@ from tkinter import dialog
 from playwright.sync_api import Playwright, Page, expect
 import pytest
 import json
+from pages.login_page import LoginPage
 
 # JSON file -> util -> access to test
 with open("data/credentials.json") as f:
@@ -48,8 +49,14 @@ def test_e2e_web_api(playwright: Playwright, user_credentials):
     page = context.new_page()
 
     # Login
-    page.goto("https://rahulshettyacademy.com/client/#/")
-    page.fill("#userEmail", user_credentials['userEmail'])
-    page.fill("#userPassword", user_credentials['userPassword'])
-    page.click("#login")
+    login_page=LoginPage(page)
+    login_page.navigate_to_login_page()
+    dashboard_page=login_page.login(user_credentials['userEmail'],user_credentials['userPassword'])
+    # Assert
     expect(page).to_have_url("https://rahulshettyacademy.com/client/#/dashboard/dash", timeout=10000)
+    
+    # Dashboard actions - Click on add to cart for an item
+    # TBD
+
+
+
