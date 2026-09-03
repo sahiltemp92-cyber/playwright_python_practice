@@ -4,7 +4,7 @@ class LoginPage:
     def __init__(self, page:Page):
         self.page = page
     
-        self.email_textbox=self.page.get_by_role("textbox", name="email@example.com")
+        self.email_textbox=self.page.get_by_placeholder("email@example.com")
         self.password_textbox=self.page.get_by_placeholder("enter your passsword")
         self.login_button=self.page.get_by_role("button", name="Login")
 

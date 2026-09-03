@@ -27,7 +27,8 @@ class DashboardPage:
         self.orders_button.click()
         from pages.orders_list_page import OrderListPage
         order_list_page = OrderListPage(self.page)
-        return order_list_page
+        if order_list_page.no_orders_message.is_visible() or order_list_page.orders_table.is_visible():
+            return order_list_page
     
     def navigate_to_cart(self):
         self.cart_button.click()

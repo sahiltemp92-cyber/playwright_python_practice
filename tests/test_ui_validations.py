@@ -1,3 +1,4 @@
+from conftest import user_credentials
 from tkinter import dialog
 from playwright.sync_api import Playwright, Page, expect
 import pytest
@@ -12,7 +13,7 @@ with open("data/credentials.json") as f:
 user_credentials_list = test_data['user_credentials']
 
 
-def test_ui_validations_dynamic_script(page:Page):
+def test_ui_validations_bad_practice(page:Page):
     """Verify that 2 items are shown in cart. -> IphoneX and Nokia Edge"""
 
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
@@ -43,19 +44,25 @@ def test_ui_validations_dynamic_script(page:Page):
 
 @pytest.mark.api
 @pytest.mark.parametrize("user_credentials", user_credentials_list)
-def test_e2e_web_api(playwright: Playwright, user_credentials):
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+def test_e2e_web_api_best_practice(playwright: Playwright, browser_instance, user_credentials):
+    # browser = playwright.chromium.launch(headless=False)
+    # context = browser.new_context()
+    # page = context.new_page()
+
+    # Test data
+    userEmail=user_credentials['userEmail']
+    userPassword=user_credentials['userPassword']
 
     # Login
-    login_page=LoginPage(page)
+    login_page=LoginPage(browser_instance)
     login_page.navigate_to_login_page()
-    dashboard_page=login_page.login(user_credentials['userEmail'],user_credentials['userPassword'])
+    dashboard_page=login_page.login(userEmail, userPassword)
+
     # Assert
-    expect(page).to_have_url("https://rahulshettyacademy.com/client/#/dashboard/dash", timeout=10000)
+    expect(dashboard_page.page).to_have_url("https://rahulshettyacademy.com/client/#/dashboard/dash", timeout=10000)
     
-    # Dashboard actions - Click on add to cart for an item
+    # Dashboard actions - Go to Orders
+    dashboard_page.navigate_to_orders()
     # TBD
 
 

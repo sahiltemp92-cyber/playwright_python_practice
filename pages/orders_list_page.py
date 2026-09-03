@@ -4,6 +4,8 @@ class OrderListPage:
         self.page = page
         self.orders_table=self.page.get_by_role("table",name="Order ID")
         self.home_button=self.page.get_by_role("button", name="HOME")
+        self.no_orders_message=self.page.locator(".mt-4")
+        
 
     def navigate_to_dashboard(self):
         self.home_button.click()
