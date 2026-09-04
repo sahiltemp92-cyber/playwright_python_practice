@@ -1,4 +1,3 @@
-from _pytest import scope
 import pytest
 
 def pytest_addoption(parser):
@@ -16,8 +15,8 @@ def user_credentials(request):
 @pytest.fixture
 def browser_instance(playwright, request):
     # Setup
-    browser_name = request.config.getoption("browser_name")
-    url_name = request.config.getoption("url_name")
+    browser_name = request.config.getoption("--browser_name")
+    url_name = request.config.getoption("--url_name")
     
     if browser_name=="chrome":
         browser = playwright.chromium.launch(headless=False)
